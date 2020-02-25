@@ -6,15 +6,15 @@
         android:icon="@drawable/today"
         android:title="@string/today" />
     <item
-        android:id="@+id/for_day"
-        android:enabled="true"
-        android:icon="@drawable/for_day"
-        android:title="@string/_24_hours"
-        />
-    <item
         android:id="@+id/forecast"
         android:enabled="true"
         android:icon="@drawable/forecast"
         android:title="@string/forecast"
          />
+    <item
+        android:id="@+id/for_day"
+        android:enabled="true"
+        android:icon="@drawable/cities"
+        android:title="@string/cities"
+        />
 </menu>
