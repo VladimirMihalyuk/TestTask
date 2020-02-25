@@ -32,7 +32,7 @@ class Repository private constructor(
         if(checkInternetConnection()){
             val currentWeather =
                 apiClient.getCurrentWeatherByCoordinates(longitude, latitude).await()
-            val today = currentWeather.toDatabaseObject()
+            val today: Today = currentWeather.toDatabaseObject()
             database.deleteToday()
             database.insertToday(today)
             return today
