@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TestTask</string>
+    <string name="app_name">Test\nTask</string>
     <string name="today">Today</string>
     <string name="_24_hours">24 hours</string>
     <string name="forecast">Forecast</string>
