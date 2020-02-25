@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.testtask.R
 import com.example.testtask.database.MyDatabase
@@ -44,6 +45,14 @@ class TodayFragment : Fragment() {
         viewModel.getCurrentWeatherByCityName()
         viewModel.getCurrentWeatherByCoordinates()
 
+        viewModel.loading.observe(viewLifecycleOwner, Observer {loading ->
+            if(loading){
+                binding.loading.visibility = View.VISIBLE
+            }else{
+                binding.loading.visibility = View.INVISIBLE
+            }
+
+        })
 
         return binding.root
     }

@@ -66,6 +66,10 @@ dependencies {
     //viewModel and livedata
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
+    //viewModelScope
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+
+    //swipe refresh layout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
 }
