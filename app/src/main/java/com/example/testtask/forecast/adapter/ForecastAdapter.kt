@@ -14,10 +14,7 @@ class ForecastAdapter(private var list: MutableList<ForecastListItem>,
 
     override fun getItemCount()= list.size
 
-
     override fun getItemViewType(position: Int) = list[position].type.ordinal
-
-
 
     override fun onBindViewHolder(holder: DefaultViewHolder, position: Int) {
         val row = list[position]
@@ -45,7 +42,6 @@ class ForecastAdapter(private var list: MutableList<ForecastListItem>,
         }
         return DefaultViewHolder(inflatedView)
     }
-
 
     fun updateList( newList: List<ForecastListItem>){
         val diffUtilCallback = DiffUtilCallback(this.list, newList)
@@ -82,5 +78,4 @@ class ForecastAdapter(private var list: MutableList<ForecastListItem>,
             return old == new
         }
     }
-
 }

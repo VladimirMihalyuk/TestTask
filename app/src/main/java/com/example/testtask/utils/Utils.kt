@@ -82,7 +82,7 @@ fun CurrentWeather.toDatabaseObject(): Today {
 }
 
 val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-fun String.convertToDate(): Date = format.parse(this)!!
+fun String.convertToDate(): Date = format.parse(this)
 
 val sdf = SimpleDateFormat("EEEE", Locale("en"))
 fun Date.getDayOfWeek(): String = sdf.format(this ).toUpperCase()
