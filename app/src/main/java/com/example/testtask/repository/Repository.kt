@@ -41,4 +41,19 @@ class Repository private constructor(
         }
 
     }
+
+    suspend fun getCurrentWeatherByCityName(city: String,
+                                               checkInternetConnection: () -> Boolean):Today? {
+        if(checkInternetConnection()){
+            val currentWeather =
+                apiClient.getCurrentWeatherByCityName(city).await()
+            val today = currentWeather.toDatabaseObject()
+            database.deleteToday()
+            database.insertToday(today)
+            return today
+        }else{
+            return database.getToday().firstOrNull()
+        }
+
+    }
 }

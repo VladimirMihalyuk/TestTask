@@ -31,7 +31,11 @@ class TodayFragment : Fragment() {
             val today = repository.getCurrentWeatherByCoordinates(27.567444F, 53.893009F){
                 isInternetAvailable(context)
             }
-            Log.d("WTF", "$today")
+            Log.d("WTF", "Geolocation:$today")
+            val todayCity = repository.getCurrentWeatherByCityName("Minsk"){
+                isInternetAvailable(context)
+            }
+            Log.d("WTF", "City:$todayCity")
         }
 
 
