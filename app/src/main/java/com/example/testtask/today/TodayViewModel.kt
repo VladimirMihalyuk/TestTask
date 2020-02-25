@@ -29,7 +29,7 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
                     repository.getCurrentWeatherByCoordinatesFromInternet(27.567444F,
                         53.893009F)
             }else{
-                    repository.getCurrentWeatherByCoordinatesFromCash()
+                    repository.getCurrentWeatherFromCash()
             }
 
             withContext(Dispatchers.Main){
@@ -47,7 +47,7 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
                 if(isInternetAvailable(getApplication())){
                     repository.getCurrentWeatherByCityNameFromInternet("Minsk")
                 }else{
-                    repository.getCurrentWeatherByCityNameFromCash()
+                    repository.getCurrentWeatherFromCash()
                 }
 
             withContext(Dispatchers.Main){
