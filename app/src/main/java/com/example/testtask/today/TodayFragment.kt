@@ -2,44 +2,59 @@ package com.example.testtask.today
 
 
 import android.os.Bundle
-import android.util.Log
+
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.testtask.R
 import com.example.testtask.database.MyDatabase
+import com.example.testtask.databinding.FragmentTodayBinding
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
-import com.example.testtask.utils.isInternetAvailable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 
 class TodayFragment : Fragment() {
+
+    private lateinit var viewModel: TodayViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val context = requireNotNull(context)
+        val binding:FragmentTodayBinding =
+            DataBindingUtil.inflate(inflater,
+                R.layout.fragment_today, container, false)
+        val application = requireNotNull(this.activity).application
+
         val client = WeatherAPIClient.getClient()
-        val database = MyDatabase.getInstance(context).databaseDao
+        val database = MyDatabase.getInstance(application).databaseDao
         val repository = Repository.getInstance(client, database)
-        GlobalScope.launch(Dispatchers.IO) {
-            val today = repository.getCurrentWeatherByCoordinates(27.567444F, 53.893009F){
-                isInternetAvailable(context)
-            }
-            Log.d("WTF", "Geolocation:$today")
-            val todayCity = repository.getCurrentWeatherByCityName("Minsk"){
-                isInternetAvailable(context)
-            }
-            Log.d("WTF", "City:$todayCity")
-        }
 
+        val viewModelFactory = TodayViewModelFactory(repository, application)
 
-        return inflater.inflate(R.layout.fragment_today, container, false)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(TodayViewModel::class.java)
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        viewModel.getCurrentWeatherByCityName()
+        viewModel.getCurrentWeatherByCoordinates()
+
+        viewModel.loading.observe(viewLifecycleOwner, Observer {loading ->
+            if(loading){
+                binding.loading.visibility = View.VISIBLE
+            }else{
+                binding.loading.visibility = View.INVISIBLE
+            }
+
+        })
+
+        return binding.root
     }
 
 

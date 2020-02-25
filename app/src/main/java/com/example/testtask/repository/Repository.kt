@@ -26,34 +26,31 @@ class Repository private constructor(
         }
     }
 
-    suspend fun getCurrentWeatherByCoordinates(longitude: Float,
-                                               latitude: Float,
-                                               checkInternetConnection: () -> Boolean):Today? {
-        if(checkInternetConnection()){
-            val currentWeather =
-                apiClient.getCurrentWeatherByCoordinates(longitude, latitude).await()
-            val today = currentWeather.toDatabaseObject()
-            database.deleteToday()
-            database.insertToday(today)
-            return today
-        }else{
-            return database.getToday().firstOrNull()
-        }
+    suspend fun getCurrentWeatherByCoordinatesFromInternet(longitude: Float,
+                                               latitude: Float):Today? {
+        val currentWeather =
+            apiClient.getCurrentWeatherByCoordinates(longitude, latitude).await()
+        val today: Today = currentWeather.toDatabaseObject()
+        database.deleteToday()
+        database.insertToday(today)
+        return today
 
     }
 
-    suspend fun getCurrentWeatherByCityName(city: String,
-                                               checkInternetConnection: () -> Boolean):Today? {
-        if(checkInternetConnection()){
-            val currentWeather =
-                apiClient.getCurrentWeatherByCityName(city).await()
-            val today = currentWeather.toDatabaseObject()
-            database.deleteToday()
-            database.insertToday(today)
-            return today
-        }else{
-            return database.getToday().firstOrNull()
-        }
+    suspend fun getCurrentWeatherByCoordinatesFromCash():Today?{
+        return database.getToday().firstOrNull()
+    }
 
+    suspend fun getCurrentWeatherByCityNameFromInternet(city: String):Today? {
+        val currentWeather =
+            apiClient.getCurrentWeatherByCityName(city).await()
+        val today = currentWeather.toDatabaseObject()
+        database.deleteToday()
+        database.insertToday(today)
+        return today
+    }
+
+    suspend fun getCurrentWeatherByCityNameFromCash():Today? {
+        return database.getToday().firstOrNull()
     }
 }
