@@ -3,6 +3,9 @@ package com.example.testtask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.testtask.cities.CitiesFragment
+import com.example.testtask.forecast.ForecastFragment
+import com.example.testtask.today.TodayFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.for_day -> {
-                loadFragment(ForDayFragment())
+                loadFragment(CitiesFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.forecast -> {
