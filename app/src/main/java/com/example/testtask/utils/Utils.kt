@@ -46,8 +46,10 @@ fun windDegreeToDirection(degree: Int): String  =
 
 fun Double?.kelvinToCelsius() = (this?.toInt() ?: 273) - 273
 
+
+
 fun CurrentWeather.toDatabaseObject(): Today {
-    val image = "i" + (this.weather?.getOrNull(0)?.icon ?: "01d")
+    val imageText = "i" + (this.weather?.getOrNull(0)?.icon ?: "01d")
     val  city = "${this.name}, ${this.sys?.country}"
     val temperatureValue = this.main?.temp?.kelvinToCelsius() ?: 0
     val temperature = "${temperatureValue}°C |${this.weather?.getOrNull(0)?.main}"
@@ -63,7 +65,7 @@ fun CurrentWeather.toDatabaseObject(): Today {
         this.wind?.deg ?: 0
     )}"
     val today = Today(
-        image,
+        imageText,
         city,
         temperature,
         cloudiness,

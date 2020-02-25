@@ -2,22 +2,31 @@ package com.example.testtask.today
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.testtask.database.Today
 import com.example.testtask.repository.Repository
 import com.example.testtask.utils.isInternetAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class TodayViewModel (private val repository: Repository, application: Application)
+class TodayViewModel (private val repository: Repository,application: Application)
     : AndroidViewModel(application) {
+
+    private var _today = MutableLiveData<Today?>()
+    val today: LiveData<Today?>
+        get() = _today
+
 
     fun getCurrentWeatherByCoordinates(){
         viewModelScope.launch(Dispatchers.IO) {
-            val today = repository.getCurrentWeatherByCoordinates(27.567444F, 53.893009F){
+            val todayGeo = repository.getCurrentWeatherByCoordinates(27.567444F, 53.893009F){
                 isInternetAvailable(getApplication())
             }
-            Log.d("WTF", "Geolocation:$today")
+            withContext(Dispatchers.Main){
+                _today.value = todayGeo
+                Log.d("WTF", "${today.value}")
+            }
         }
     }
 
@@ -26,7 +35,15 @@ class TodayViewModel (private val repository: Repository, application: Applicati
             val todayCity = repository.getCurrentWeatherByCityName("Minsk"){
                 isInternetAvailable(getApplication())
             }
-            Log.d("WTF", "City:$todayCity")
+            withContext(Dispatchers.Main){
+                _today.value = todayCity
+            }
         }
     }
+
+    val idOfImage = Transformations.map(today) { today ->
+        application.resources.getIdentifier(today?.image,
+            "drawable", application.packageName)
+    }
+
 }
