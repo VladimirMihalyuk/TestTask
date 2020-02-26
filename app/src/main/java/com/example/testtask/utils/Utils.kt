@@ -4,8 +4,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import com.example.testtask.database.Forecast
 import com.example.testtask.database.Today
+import com.example.testtask.forecast.ForecastModel
 import com.example.testtask.network.data.CurrentWeather
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 fun isInternetAvailable(context: Context?): Boolean {
@@ -76,3 +80,26 @@ fun CurrentWeather.toDatabaseObject(): Today {
     )
     return today
 }
+
+val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+fun String.convertToDate(): Date = format.parse(this)
+
+val sdf = SimpleDateFormat("EEEE", Locale("en"))
+fun Date.getDayOfWeek(): String = sdf.format(this ).toUpperCase()
+
+fun List<ForecastModel>.toListOfForecast(): List<Forecast> =
+    this.map{it -> Forecast(
+        date = it.date,
+        icon = it.icon,
+        description = it.description,
+        degree = it.degree)}
+
+fun List<Forecast>.toListOfForecastModels(): List<ForecastModel>
+        = this.map{it -> ForecastModel(
+    it.date,
+    it.icon,
+    it.description,
+    it.degree)}
+
+val formatOfTime = SimpleDateFormat("HH:mm")
+fun Date.getHoursAsString() = formatOfTime.format(this)
