@@ -36,8 +36,13 @@ interface DatabaseDAO {
     @Query("UPDATE City SET popularity = popularity + 1, isLastSelected = 1 WHERE id == :id")
     fun citySelected(id: Long)
 
-    @Query ("UPDATE City SET isLastSelected = 0")
-    fun unselectAll()
+    @Query ("UPDATE City SET isLastSelected = 0 WHERE isLastSelected == 1 and id <> :id ")
+    fun unselectAllExcept(id: Long)
 
+    @Query ("UPDATE City SET isLastSelected = 0 WHERE id == :id ")
+    fun unselectCity(id: Long)
+
+    @Query("SELECT * FROM City WHERE isLastSelected == 1")
+    fun getAllSelected(): LiveData<List<City>>
 
 }

@@ -9,12 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.testtask.MainActivity
+import com.example.testtask.activity.MainActivity
 import com.example.testtask.R
 import com.example.testtask.database.City
 import com.example.testtask.database.MyDatabase
 import com.example.testtask.network.WeatherAPIClient
-import com.example.testtask.network.data.Main
 import com.example.testtask.repository.Repository
 import kotlinx.android.synthetic.main.fragment_cities.view.*
 
@@ -40,8 +39,9 @@ class CitiesFragment : Fragment() {
         val viewModelFactory = CitiesViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CitiesViewModel::class.java)
 
-        val adapter = CitiesAdapter({ city: City, _: Boolean -> Log.d("WTF","$city" )},
-            {city: City -> Log.d("WTF","$city" )} )
+        val adapter = CitiesAdapter({ city: City, isSelected: Boolean ->
+            viewModel.selectCity(city,isSelected )},
+            {city: City -> viewModel.deleteCity(city)} )
 
         view.list.adapter = adapter
 
@@ -53,10 +53,14 @@ class CitiesFragment : Fragment() {
 
         viewModel.allCities.observe(viewLifecycleOwner, Observer {
             it?.let {
-
                 adapter.submitList(it)
+                Log.d("WTF", "$it")
+            }
+        })
 
-
+        viewModel.selectedCities.observe(viewLifecycleOwner, Observer{list ->
+            list.firstOrNull()?.let{
+                (activity as MainActivity).setCityName(it.name)
             }
         })
 

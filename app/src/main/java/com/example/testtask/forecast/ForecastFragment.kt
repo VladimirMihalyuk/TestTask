@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.testtask.R
+import com.example.testtask.activity.ActivityViewModel
+import com.example.testtask.activity.MainActivity
 import com.example.testtask.database.MyDatabase
 import com.example.testtask.forecast.adapter.ForecastAdapter
 import com.example.testtask.forecast.adapter.ForecastListItem
@@ -31,8 +33,6 @@ class ForecastFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_forecast, container, false)
         val application = requireNotNull(this.activity).application
-
-
 
         val client = WeatherAPIClient.getClient()
         val database = MyDatabase.getInstance(application).databaseDao
@@ -57,8 +57,12 @@ class ForecastFragment : Fragment() {
             }
         })
 
-        //viewModel.getForecastByCoordinates()
-        viewModel.getForecastByCityName()
+        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                viewModel.getForecastByCityName(it)
+            }
+        })
+
 
         return view
     }

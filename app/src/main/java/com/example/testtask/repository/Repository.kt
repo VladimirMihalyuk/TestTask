@@ -88,4 +88,19 @@ class Repository private constructor(
     suspend fun addNewCity(city: City){
         database.insertCity(city)
     }
+
+    suspend fun deleteCity(city: City){
+        database.deleteCity(city)
+    }
+
+    suspend fun selectCity(city:City){
+        database.citySelected(city.id)
+        database.unselectAllExcept(city.id)
+    }
+
+    suspend fun unselectCity(city: City){
+        database.unselectCity(city.id)
+    }
+
+    fun getSelected() = database.getAllSelected()
 }

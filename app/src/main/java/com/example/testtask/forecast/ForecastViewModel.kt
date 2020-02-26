@@ -42,12 +42,12 @@ class ForecastViewModel(private val repository: Repository, application: Applica
         }
     }
 
-    fun getForecastByCityName(){
+    fun getForecastByCityName(cityName: String){
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             var todayCity =
                 if(isInternetAvailable(getApplication())){
-                    repository.getForecastByCityFromInternet("Minsk")
+                    repository.getForecastByCityFromInternet(cityName)
                 }else{
                     repository.getForecastFromCash()
                 }

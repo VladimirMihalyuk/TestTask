@@ -1,5 +1,6 @@
 package com.example.testtask.cities
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testtask.database.City
@@ -18,4 +19,22 @@ class CitiesViewModel(private val repository: Repository)
             repository.addNewCity(city)
         }
     }
+
+    fun deleteCity(city:City){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteCity(city)
+        }
+    }
+
+    fun selectCity(city: City, isSelected: Boolean){
+        viewModelScope.launch(Dispatchers.IO) {
+            if(isSelected){
+                repository.selectCity(city)
+            }else{
+                repository.unselectCity(city)
+            }
+        }
+    }
+
+    val selectedCities = repository.getSelected()
 }

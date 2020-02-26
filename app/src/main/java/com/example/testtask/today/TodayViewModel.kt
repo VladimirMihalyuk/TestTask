@@ -40,12 +40,12 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
         }
     }
 
-    fun getCurrentWeatherByCityName(){
+    fun getCurrentWeatherByCityName(cityName: String){
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             var todayCity =
                 if(isInternetAvailable(getApplication())){
-                    repository.getCurrentWeatherByCityNameFromInternet("Minsk")
+                    repository.getCurrentWeatherByCityNameFromInternet(cityName)
                 }else{
                     repository.getCurrentWeatherFromCash()
                 }

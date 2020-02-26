@@ -1,8 +1,11 @@
-package com.example.testtask
+package com.example.testtask.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.testtask.R
 import com.example.testtask.cities.CitiesFragment
 import com.example.testtask.forecast.ForecastFragment
 import com.example.testtask.today.TodayFragment
@@ -11,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-
+    lateinit var viewModel: ActivityViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +24,16 @@ class MainActivity : AppCompatActivity() {
             showStartFragment(TodayFragment())
         }
         navigation_view.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        viewModel = ViewModelProvider(this).get(ActivityViewModel::class.java)
+
+        viewModel.city.observe(this, Observer {city ->
+            toolbar_title.text = city
+        })
+    }
+
+    fun setCityName(cityName: String){
+        viewModel.setCityName(cityName)
     }
 
 
@@ -41,8 +54,6 @@ class MainActivity : AppCompatActivity() {
         }
         false
     }
-
-
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()

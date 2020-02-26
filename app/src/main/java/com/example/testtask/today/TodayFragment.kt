@@ -11,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.testtask.R
+import com.example.testtask.activity.ActivityViewModel
+import com.example.testtask.activity.MainActivity
 import com.example.testtask.database.MyDatabase
 import com.example.testtask.databinding.FragmentTodayBinding
 import com.example.testtask.network.WeatherAPIClient
@@ -42,7 +44,6 @@ class TodayFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.getCurrentWeatherByCityName()
         viewModel.getCurrentWeatherByCoordinates()
 
         viewModel.loading.observe(viewLifecycleOwner, Observer {loading ->
@@ -52,6 +53,12 @@ class TodayFragment : Fragment() {
                 binding.loading.visibility = View.INVISIBLE
             }
 
+        })
+
+        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                viewModel.getCurrentWeatherByCityName(it)
+            }
         })
 
         return binding.root
