@@ -7,4 +7,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cities">Cities</string>
+    <string name="add">Add new city</string>
+    <string name="add_new_city">Please add new city</string>
+    <string name="city_name">City name</string>
 </resources>

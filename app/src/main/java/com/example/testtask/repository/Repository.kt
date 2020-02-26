@@ -1,5 +1,6 @@
 package com.example.testtask.repository
 
+import com.example.testtask.database.City
 import com.example.testtask.database.DatabaseDAO
 import com.example.testtask.database.Today
 import com.example.testtask.forecast.toListOfModels
@@ -82,5 +83,9 @@ class Repository private constructor(
         return list.toListOfForecastModels().toListWithHeaders()
     }
 
+    fun getAllCities() = database.getAllCities()
 
+    suspend fun addNewCity(city: City){
+        database.insertCity(city)
+    }
 }

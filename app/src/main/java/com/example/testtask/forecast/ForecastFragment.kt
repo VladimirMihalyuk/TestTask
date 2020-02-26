@@ -55,7 +55,6 @@ class ForecastFragment : Fragment() {
             }else{
                 view.loading.visibility = View.INVISIBLE
             }
-
         })
 
         //viewModel.getForecastByCoordinates()
