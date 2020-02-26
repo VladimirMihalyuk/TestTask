@@ -20,7 +20,12 @@ class ForecastViewModel(private val repository: Repository, application: Applica
     val list: LiveData<List<ForecastListItem>>
         get() = _list
 
+    private var _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean>
+        get() = _loading
+
     fun getForecastByCoordinates(){
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val forecastGeo =
                 if(isInternetAvailable(getApplication())){
@@ -32,11 +37,13 @@ class ForecastViewModel(private val repository: Repository, application: Applica
 
             withContext(Dispatchers.Main){
                 _list.value = forecastGeo
+                _loading.value = false
             }
         }
     }
 
     fun getForecastByCityName(){
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             var todayCity =
                 if(isInternetAvailable(getApplication())){
@@ -47,6 +54,7 @@ class ForecastViewModel(private val repository: Repository, application: Applica
 
             withContext(Dispatchers.Main){
                 _list.value = todayCity
+                _loading.value = false
             }
         }
     }

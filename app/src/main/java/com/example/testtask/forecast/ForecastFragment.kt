@@ -49,6 +49,15 @@ class ForecastFragment : Fragment() {
             adapter.updateList(list)
         })
 
+        viewModel.loading.observe(viewLifecycleOwner, Observer { loading ->
+            if(loading){
+                view.loading.visibility = View.VISIBLE
+            }else{
+                view.loading.visibility = View.INVISIBLE
+            }
+
+        })
+
         //viewModel.getForecastByCoordinates()
         viewModel.getForecastByCityName()
 
