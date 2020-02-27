@@ -68,7 +68,7 @@ class CitiesFragment : Fragment() {
         view.geolocation.setOnCheckedChangeListener { _, isChecked ->
             (activity as MainActivity).viewModel.setUseGeolocation(isChecked)
             if(isChecked){
-                (activity as MainActivity).viewModel.requestLocation()
+                (activity as MainActivity).askGeolocation()
                 (activity as MainActivity).setTitle("Your current location")
             }
         }
