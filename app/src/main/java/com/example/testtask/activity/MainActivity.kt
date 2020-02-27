@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
                 != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    viewModel.setUseGeolocation(false)
                     AlertDialog.Builder(this)
                         .setTitle("Geolocation permission")
                         .setMessage("Need your location for work")
@@ -133,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }else{
                 viewModel.requestLocation()
+                viewModel.setUseGeolocation(true)
             }
         }else{
             showSnackBar()
@@ -145,8 +147,9 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    viewModel.requestLocation()
+                    askGeolocation()
                 } else {
+                    viewModel.setUseGeolocation(false)
                     showSnackBarWithAction()
                 }
                 return
