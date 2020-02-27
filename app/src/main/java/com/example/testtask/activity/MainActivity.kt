@@ -38,9 +38,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     val MY_PERMISSIONS_REQUEST = 12
 
-    lateinit var viewModel: ActivityViewModel
-    lateinit var container: FrameLayout
-    lateinit var title: TextView
+    private lateinit var viewModel: ActivityViewModel
+    private lateinit var container: FrameLayout
+    private lateinit var title: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,6 +162,18 @@ class MainActivity : AppCompatActivity() {
         askGeolocation()
     }
 
+
+    fun useGeolocation() = viewModel.useGeolocation
+
+    fun setUseGeolocation(value: Boolean){
+        viewModel.setUseGeolocation(value)
+    }
+
+    fun getCity() = viewModel.city
+
+    fun useLocation() = viewModel.useGeolocation()
+
+    fun location() = viewModel.location
 
     private fun showSnackBarWithAction(){
         val mySnackbar = Snackbar.make(container, "Please open settings and turn on permission",

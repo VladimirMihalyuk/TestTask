@@ -59,8 +59,8 @@ class TodayFragment : Fragment() {
 
         })
 
-        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
-            if((activity as MainActivity).viewModel.useGeolocation() == false){
+        (activity as MainActivity).getCity().observe(viewLifecycleOwner, Observer {list ->
+            if((activity as MainActivity).useLocation() == false){
                 val city = list.firstOrNull()
                 if( city  != null){
                     viewModel.getCurrentWeatherByCityName(city.name)
@@ -70,8 +70,8 @@ class TodayFragment : Fragment() {
             }
         })
 
-        (activity as MainActivity).viewModel.location.observe(viewLifecycleOwner, Observer {
-            if((activity as MainActivity).viewModel.useGeolocation() == true){
+        (activity as MainActivity).location().observe(viewLifecycleOwner, Observer {
+            if((activity as MainActivity).useLocation() == true){
                 it?.let{
                     viewModel.getCurrentWeatherByCoordinates(it.longitude.toFloat(),
                         it.latitude.toFloat())

@@ -59,14 +59,14 @@ class CitiesFragment : Fragment() {
             }
         })
 
-        (activity as MainActivity).viewModel.useGeolocation.observe(viewLifecycleOwner, Observer {
+        (activity as MainActivity).useGeolocation().observe(viewLifecycleOwner, Observer {
             it?.let {
                 geolocation.isChecked = it
             }
         })
 
         view.geolocation.setOnCheckedChangeListener { _, isChecked ->
-            (activity as MainActivity).viewModel.setUseGeolocation(isChecked)
+            (activity as MainActivity).setUseGeolocation(isChecked)
             if(isChecked){
                 (activity as MainActivity).askGeolocation()
                 (activity as MainActivity).setTitle("Your current location")
