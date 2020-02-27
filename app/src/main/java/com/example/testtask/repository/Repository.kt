@@ -1,5 +1,6 @@
 package com.example.testtask.repository
 
+import com.example.testtask.database.City
 import com.example.testtask.database.DatabaseDAO
 import com.example.testtask.database.Today
 import com.example.testtask.forecast.toListOfModels
@@ -82,5 +83,24 @@ class Repository private constructor(
         return list.toListOfForecastModels().toListWithHeaders()
     }
 
+    fun getAllCities() = database.getAllCities()
 
+    suspend fun addNewCity(city: City){
+        database.insertCity(city)
+    }
+
+    suspend fun deleteCity(city: City){
+        database.deleteCity(city)
+    }
+
+    suspend fun selectCity(city:City){
+        database.citySelected(city.id)
+        database.unselectAllExcept(city.id)
+    }
+
+    suspend fun unselectCity(city: City){
+        database.unselectCity(city.id)
+    }
+
+    fun getSelected() = database.getAllSelected()
 }

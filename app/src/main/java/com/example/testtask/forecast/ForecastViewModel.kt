@@ -24,38 +24,67 @@ class ForecastViewModel(private val repository: Repository, application: Applica
     val loading: LiveData<Boolean>
         get() = _loading
 
-    fun getForecastByCoordinates(){
-        _loading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            val forecastGeo =
-                if(isInternetAvailable(getApplication())){
-                    repository.getForecastByCoordinatesFromInternet(27.567444F,
-                        53.893009F)
-                }else{
-                    repository.getForecastFromCash()
-                }
 
-            withContext(Dispatchers.Main){
-                _list.value = forecastGeo
-                _loading.value = false
+    private var _internetError = MutableLiveData<Boolean>()
+    val internetError: LiveData<Boolean>
+        get() = _internetError
+
+    fun resetErrorMessage(){
+        _internetError.value = false
+    }
+
+    fun getForecastByCoordinates(longitude: Float, latitude: Float){
+        _loading.value = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try{
+                val forecastGeo =
+                    if(isInternetAvailable(getApplication())){
+                        repository.getForecastByCoordinatesFromInternet(longitude,latitude)
+                    }else{
+                        repository.getForecastFromCash()
+                    }
+
+                withContext(Dispatchers.Main){
+                    _list.value = forecastGeo
+                }
+            }catch (e: Exception){
+                withContext(Dispatchers.Main){
+                    _internetError.value = true
+                }
+            }finally {
+                withContext(Dispatchers.Main){
+                    _loading.value = false
+                }
             }
         }
     }
 
-    fun getForecastByCityName(){
+    fun getForecastByCityName(cityName: String){
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            var todayCity =
-                if(isInternetAvailable(getApplication())){
-                    repository.getForecastByCityFromInternet("Minsk")
-                }else{
-                    repository.getForecastFromCash()
-                }
+            try {
+                val todayCity =
+                    if(isInternetAvailable(getApplication())){
+                        repository.getForecastByCityFromInternet(cityName)
+                    }else{
+                        repository.getForecastFromCash()
+                    }
 
-            withContext(Dispatchers.Main){
-                _list.value = todayCity
-                _loading.value = false
+                withContext(Dispatchers.Main){
+                    _list.value = todayCity
+                }
+            }catch (e: Exception){
+                withContext(Dispatchers.Main){
+                    _internetError.value = true
+                }
+            }finally {
+                withContext(Dispatchers.Main){
+                    _loading.value = false
+                }
             }
+
+
         }
     }
 

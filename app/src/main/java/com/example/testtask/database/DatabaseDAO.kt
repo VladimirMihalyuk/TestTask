@@ -1,9 +1,7 @@
 package com.example.testtask.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.lifecycle.LiveData
+import androidx.room.*
 
 
 @Dao
@@ -25,4 +23,26 @@ interface DatabaseDAO {
 
     @Query("DELETE FROM Forecast")
     fun deleteForecast()
+
+    @Query("SELECT * FROM City ORDER BY popularity DESC")
+    fun getAllCities(): LiveData<List<City>>
+
+    @Delete
+    fun deleteCity(city: City)
+
+    @Insert
+    fun insertCity(city: City)
+
+    @Query("UPDATE City SET popularity = popularity + 1, isLastSelected = 1 WHERE id == :id")
+    fun citySelected(id: Long)
+
+    @Query ("UPDATE City SET isLastSelected = 0 WHERE isLastSelected == 1 and id <> :id ")
+    fun unselectAllExcept(id: Long)
+
+    @Query ("UPDATE City SET isLastSelected = 0 WHERE id == :id ")
+    fun unselectCity(id: Long)
+
+    @Query("SELECT * FROM City WHERE isLastSelected == 1")
+    fun getAllSelected(): LiveData<List<City>>
+
 }

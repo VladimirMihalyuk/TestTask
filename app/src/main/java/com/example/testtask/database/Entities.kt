@@ -38,6 +38,17 @@ data class Forecast(
 
     val degree: Int)
 
+@Entity
+data class City(
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0L,
+
+    var isLastSelected: Boolean = false,
+
+    val name: String,
+
+    val popularity: Int = 0)
+
 
 class Converters {
     @TypeConverter

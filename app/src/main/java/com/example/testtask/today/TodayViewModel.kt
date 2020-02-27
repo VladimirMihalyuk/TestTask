@@ -21,40 +21,66 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
     val loading: LiveData<Boolean>
         get() = _loading
 
-    fun getCurrentWeatherByCoordinates(){
+    private var _internetError = MutableLiveData<Boolean>()
+    val internetError: LiveData<Boolean>
+        get() = _internetError
+
+    fun resetErrorMessage(){
+        _internetError.value = false
+    }
+
+    fun getCurrentWeatherByCoordinates(longitude: Float, latitude: Float){
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            var todayGeo =
-            if(isInternetAvailable(getApplication())){
-                    repository.getCurrentWeatherByCoordinatesFromInternet(27.567444F,
-                        53.893009F)
-            }else{
-                    repository.getCurrentWeatherFromCash()
+            try{
+                var todayGeo =
+                    if(isInternetAvailable(getApplication())){
+                        repository.getCurrentWeatherByCoordinatesFromInternet(longitude, latitude)
+                    }else{
+                        repository.getCurrentWeatherFromCash()
+                    }
+
+                withContext(Dispatchers.Main){
+                    _today.value = todayGeo
+                }
+            }catch (e:Exception){
+                withContext(Dispatchers.Main){
+                    _internetError.value = true
+                }
+            }
+            finally {
+                withContext(Dispatchers.Main){
+                    _loading.value = false
+                }
             }
 
-            withContext(Dispatchers.Main){
-                _today.value = todayGeo
-                _loading.value = false
-                Log.d("WTF", "${today.value}")
-            }
         }
     }
 
-    fun getCurrentWeatherByCityName(){
+    fun getCurrentWeatherByCityName(cityName: String){
         _loading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            var todayCity =
-                if(isInternetAvailable(getApplication())){
-                    repository.getCurrentWeatherByCityNameFromInternet("Minsk")
-                }else{
-                    repository.getCurrentWeatherFromCash()
-                }
 
-            withContext(Dispatchers.Main){
-                _today.value = todayCity
-                _loading.value = false
-                Log.d("WTF", "${today.value}")
+        viewModelScope.launch(Dispatchers.IO) {
+            try{
+                val todayCity =
+                    if(isInternetAvailable(getApplication())){
+                        repository.getCurrentWeatherByCityNameFromInternet(cityName)
+                    }else{
+                        repository.getCurrentWeatherFromCash()
+                    }
+                withContext(Dispatchers.Main){
+                    _today.value = todayCity
+                }
+            }catch (e: Exception){
+                withContext(Dispatchers.Main){
+                    _internetError.value = true
+                }
+            }finally {
+                withContext(Dispatchers.Main){
+                    _loading.value = false
+                }
             }
+
         }
     }
 
