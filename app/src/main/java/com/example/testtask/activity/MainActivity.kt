@@ -9,10 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -34,13 +38,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     val MY_PERMISSIONS_REQUEST = 12
 
-    lateinit var viewModel: ActivityViewModel
-    lateinit var container: FrameLayout
-    lateinit var title: TextView
+    private lateinit var viewModel: ActivityViewModel
+    private lateinit var container: FrameLayout
+    private lateinit var title: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val myToolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(myToolbar)
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
         container = findViewById(R.id.container)
         title = findViewById(R.id.toolbar_title)
@@ -72,12 +80,43 @@ class MainActivity : AppCompatActivity() {
         title.text = titleText
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.background_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here.
+        val id = item.getItemId()
+
+        if (id == R.id.noUpdate) {
+            viewModel.stopUpdates()
+            return true
+        }
+        if (id == R.id.update_15) {
+
+            viewModel.start15MinutesUpdate()
+            return true
+        }
+        if (id == R.id.update_hour) {
+
+            viewModel.startHourMinutesUpdate()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+
+    }
+
+
     fun askGeolocation(){
         if(isLocationAvailable(this)){
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    viewModel.setUseGeolocation(false)
                     AlertDialog.Builder(this)
                         .setTitle("Geolocation permission")
                         .setMessage("Need your location for work")
@@ -95,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }else{
                 viewModel.requestLocation()
+                viewModel.setUseGeolocation(true)
             }
         }else{
             showSnackBar()
@@ -107,8 +147,9 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    viewModel.requestLocation()
+                    askGeolocation()
                 } else {
+                    viewModel.setUseGeolocation(false)
                     showSnackBarWithAction()
                 }
                 return
@@ -121,6 +162,18 @@ class MainActivity : AppCompatActivity() {
         askGeolocation()
     }
 
+
+    fun useGeolocation() = viewModel.useGeolocation
+
+    fun setUseGeolocation(value: Boolean){
+        viewModel.setUseGeolocation(value)
+    }
+
+    fun getCity() = viewModel.city
+
+    fun useLocation() = viewModel.useGeolocation()
+
+    fun location() = viewModel.location
 
     private fun showSnackBarWithAction(){
         val mySnackbar = Snackbar.make(container, "Please open settings and turn on permission",

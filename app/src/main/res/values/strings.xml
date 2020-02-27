@@ -11,4 +11,7 @@
     <string name="add_new_city">Please add new city</string>
     <string name="city_name">City name</string>
     <string name="use_my_location">Use my location</string>
+    <string name="no_updates">No Updates</string>
+    <string name="update_every_15_minutes">Update every 15 minutes</string>
+    <string name="update_every_hour">Update every hour</string>
 </resources>

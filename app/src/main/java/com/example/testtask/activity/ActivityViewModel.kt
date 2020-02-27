@@ -8,10 +8,13 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.testtask.repository.Repository
+import com.example.testtask.work_manager.cancelWork
+import com.example.testtask.work_manager.startWork
 
 class ActivityViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
 
@@ -58,5 +61,26 @@ class ActivityViewModel(private val repository: Repository, application: Applica
 
     private fun removeUpdate(listener: LocationListener){
         locationManager.removeUpdates(listener)
+    }
+
+    fun start15MinutesUpdate(){
+        city.value?.firstOrNull()?.let{
+            startWork(it.name, 15)
+            Toast.makeText(getApplication(), "Updates for ${it.name} evey 15 minutes",
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun startHourMinutesUpdate(){
+        city.value?.firstOrNull()?.let{
+            startWork(it.name, 60)
+            Toast.makeText(getApplication(), "Updates for ${it.name} evey hour",
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun stopUpdates(){
+        cancelWork()
+        Toast.makeText(getApplication(), "All updates canceled", Toast.LENGTH_SHORT).show()
     }
 }
