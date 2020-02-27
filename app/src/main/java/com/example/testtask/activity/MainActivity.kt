@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -90,13 +91,17 @@ class MainActivity : AppCompatActivity() {
         val id = item.getItemId()
 
         if (id == R.id.noUpdate) {
-
+            viewModel.stopUpdates()
             return true
         }
-        if (id == R.id.update_30) {
+        if (id == R.id.update_15) {
+
+            viewModel.start15MinutesUpdate()
             return true
         }
         if (id == R.id.update_hour) {
+
+            viewModel.startHourMinutesUpdate()
             return true
         }
 

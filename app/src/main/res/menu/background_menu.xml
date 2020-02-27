@@ -6,8 +6,8 @@
         android:id="@+id/noUpdate"
         android:title="@string/no_updates"/>
     <item
-        android:id="@+id/update_30"
-        android:title="@string/update_every_30_minutes"/>
+        android:id="@+id/update_15"
+        android:title="@string/update_every_15_minutes"/>
     <item
         android:id="@+id/update_hour"
         android:title="@string/update_every_hour"/>

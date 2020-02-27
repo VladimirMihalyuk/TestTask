@@ -12,6 +12,6 @@
     <string name="city_name">City name</string>
     <string name="use_my_location">Use my location</string>
     <string name="no_updates">No Updates</string>
-    <string name="update_every_30_minutes">Update every 30 minutes</string>
+    <string name="update_every_15_minutes">Update every 15 minutes</string>
     <string name="update_every_hour">Update every hour</string>
 </resources>

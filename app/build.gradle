@@ -70,8 +70,8 @@ dependencies {
     //viewModelScope
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 
-    //swipe refresh layout
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
+    // workmanager
+    implementation "android.arch.work:work-runtime-ktx:1.0.1"
 
 }
