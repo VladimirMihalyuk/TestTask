@@ -9,10 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -41,6 +44,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val myToolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(myToolbar)
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
         container = findViewById(R.id.container)
         title = findViewById(R.id.toolbar_title)
@@ -71,6 +78,32 @@ class MainActivity : AppCompatActivity() {
     fun setTitle(titleText: String){
         title.text = titleText
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.background_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here.
+        val id = item.getItemId()
+
+        if (id == R.id.noUpdate) {
+
+            return true
+        }
+        if (id == R.id.update_30) {
+            return true
+        }
+        if (id == R.id.update_hour) {
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+
+    }
+
 
     fun askGeolocation(){
         if(isLocationAvailable(this)){
