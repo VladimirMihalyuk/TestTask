@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.testtask.R
 import com.example.testtask.activity.ActivityViewModel
 import com.example.testtask.activity.MainActivity
@@ -27,12 +28,14 @@ class ForecastFragment : Fragment() {
     val startList = mutableListOf<ForecastListItem>()
     private lateinit var adapter: ForecastAdapter
     private lateinit var viewModel: ForecastViewModel
+    private lateinit var list: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_forecast, container, false)
+        list = view.list
         val application = requireNotNull(this.activity).application
 
         val client = WeatherAPIClient.getClient()
@@ -58,18 +61,21 @@ class ForecastFragment : Fragment() {
             }
         })
 
+        viewModel.internetError.observe(viewLifecycleOwner, Observer {
+            if(it == true){
+                showSnackbar("Can't get information about this city")
+                viewModel.resetErrorMessage()
+            }
+        })
+
         (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
             if((activity as MainActivity).viewModel.useGeolocation() == false){
                 val city = list.firstOrNull()
                 if(city != null){
                     viewModel.getForecastByCityName(city.name)
                 } else {
-                    Snackbar.make(view.list, "Please select city",
-                        Snackbar.LENGTH_LONG).show()
+                    showSnackbar("Please select city")
                 }
-
-
-
             }
         })
 
@@ -81,10 +87,11 @@ class ForecastFragment : Fragment() {
                 }
             }
         })
-
-
         return view
     }
 
+    fun showSnackbar(text: String){
+        Snackbar.make(list, text, Snackbar.LENGTH_SHORT).show()
+    }
 
 }

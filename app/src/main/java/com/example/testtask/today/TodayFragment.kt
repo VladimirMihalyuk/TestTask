@@ -5,8 +5,10 @@ import android.os.Bundle
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,8 @@ import com.google.android.material.snackbar.Snackbar
 class TodayFragment : Fragment() {
 
     private lateinit var viewModel: TodayViewModel
+    private lateinit var cityText: TextView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +48,7 @@ class TodayFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        cityText = binding.city
 
         viewModel.loading.observe(viewLifecycleOwner, Observer {loading ->
             if(loading){
@@ -60,12 +65,9 @@ class TodayFragment : Fragment() {
                 if( city  != null){
                     viewModel.getCurrentWeatherByCityName(city.name)
                 } else {
-                        Snackbar.make(binding.city, "Please select city",
-                            Snackbar.LENGTH_LONG).show()
+                    showSnackbar("Please select city")
                 }
-
             }
-
         })
 
         (activity as MainActivity).viewModel.location.observe(viewLifecycleOwner, Observer {
@@ -77,9 +79,20 @@ class TodayFragment : Fragment() {
             }
         })
 
+        viewModel.internetError.observe(viewLifecycleOwner, Observer {
+            if(it == true){
+                showSnackbar("Can't get information about this city")
+                viewModel.resetErrorMessage()
+            }
+        })
+
 
 
         return binding.root
+    }
+
+    fun showSnackbar(text: String){
+        Snackbar.make(cityText, text, Snackbar.LENGTH_SHORT).show()
     }
 
 }
