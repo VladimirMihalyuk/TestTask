@@ -55,9 +55,9 @@ class TodayFragment : Fragment() {
 
         })
 
-        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                viewModel.getCurrentWeatherByCityName(it)
+        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
+            list.firstOrNull()?.let{
+                viewModel.getCurrentWeatherByCityName(it.name)
             }
         })
 

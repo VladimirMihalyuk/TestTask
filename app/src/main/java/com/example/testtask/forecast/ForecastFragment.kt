@@ -57,9 +57,9 @@ class ForecastFragment : Fragment() {
             }
         })
 
-        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                viewModel.getForecastByCityName(it)
+        (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
+            list.firstOrNull()?.let{
+                viewModel.getForecastByCityName(it.name)
             }
         })
 

@@ -58,11 +58,6 @@ class CitiesFragment : Fragment() {
             }
         })
 
-        viewModel.selectedCities.observe(viewLifecycleOwner, Observer{list ->
-            list.firstOrNull()?.let{
-                (activity as MainActivity).setCityName(it.name)
-            }
-        })
 
         return view
     }
