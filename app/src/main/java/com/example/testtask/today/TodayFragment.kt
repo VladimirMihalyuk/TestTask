@@ -44,7 +44,6 @@ class TodayFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.getCurrentWeatherByCoordinates()
 
         viewModel.loading.observe(viewLifecycleOwner, Observer {loading ->
             if(loading){
@@ -56,8 +55,20 @@ class TodayFragment : Fragment() {
         })
 
         (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
-            list.firstOrNull()?.let{
-                viewModel.getCurrentWeatherByCityName(it.name)
+            if((activity as MainActivity).viewModel.useGeolocation() == false){
+                list.firstOrNull()?.let{
+                    viewModel.getCurrentWeatherByCityName(it.name)
+                }
+            }
+
+        })
+
+        (activity as MainActivity).viewModel.location.observe(viewLifecycleOwner, Observer {
+            if((activity as MainActivity).viewModel.useGeolocation() == true){
+                it?.let{
+                    viewModel.getCurrentWeatherByCoordinates(it.longitude.toFloat(),
+                        it.latitude.toFloat())
+                }
             }
         })
 

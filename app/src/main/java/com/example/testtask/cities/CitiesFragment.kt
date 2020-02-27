@@ -15,6 +15,7 @@ import com.example.testtask.database.City
 import com.example.testtask.database.MyDatabase
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
+import kotlinx.android.synthetic.main.fragment_cities.*
 import kotlinx.android.synthetic.main.fragment_cities.view.*
 
 /**
@@ -57,6 +58,20 @@ class CitiesFragment : Fragment() {
                 Log.d("WTF", "$it")
             }
         })
+
+        (activity as MainActivity).viewModel.useGeolocation.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                geolocation.isChecked = it
+            }
+        })
+
+        view.geolocation.setOnCheckedChangeListener { _, isChecked ->
+            (activity as MainActivity).viewModel.setUseGeolocation(isChecked)
+            if(isChecked){
+                (activity as MainActivity).viewModel.requestLocation()
+                (activity as MainActivity).setTitle("Your current location")
+            }
+        }
 
 
         return view

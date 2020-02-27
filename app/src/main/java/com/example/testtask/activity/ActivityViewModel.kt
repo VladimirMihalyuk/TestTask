@@ -15,8 +15,17 @@ import com.example.testtask.repository.Repository
 
 class ActivityViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
 
-    val city = repository.getSelected()
+    private val _useGeolocation = MutableLiveData<Boolean>(false)
+    val useGeolocation: LiveData<Boolean>
+        get() = _useGeolocation
 
+    fun useGeolocation() = _useGeolocation.value
+
+    fun setUseGeolocation(isUsing: Boolean){
+        _useGeolocation.value = isUsing
+    }
+
+    val city = repository.getSelected()
 
     private val locationManager =
         application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -38,6 +47,8 @@ class ActivityViewModel(private val repository: Repository, application: Applica
         override fun onProviderEnabled(provider: String?) {}
         override fun onProviderDisabled(provider: String?) {}
     }
+
+
 
     @SuppressLint("MissingPermission")
     fun requestLocation(){

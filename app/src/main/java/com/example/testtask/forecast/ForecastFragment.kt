@@ -58,8 +58,19 @@ class ForecastFragment : Fragment() {
         })
 
         (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
-            list.firstOrNull()?.let{
-                viewModel.getForecastByCityName(it.name)
+            if((activity as MainActivity).viewModel.useGeolocation() == false){
+                list.firstOrNull()?.let{
+                    viewModel.getForecastByCityName(it.name)
+                }
+            }
+        })
+
+        (activity as MainActivity).viewModel.location.observe(viewLifecycleOwner, Observer {
+            if((activity as MainActivity).viewModel.useGeolocation() == true){
+                it?.let{
+                    viewModel.getForecastByCoordinates(it.longitude.toFloat(),
+                        it.latitude.toFloat())
+                }
             }
         })
 

@@ -21,13 +21,12 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
     val loading: LiveData<Boolean>
         get() = _loading
 
-    fun getCurrentWeatherByCoordinates(){
+    fun getCurrentWeatherByCoordinates(longitude: Float, latitude: Float){
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             var todayGeo =
             if(isInternetAvailable(getApplication())){
-                    repository.getCurrentWeatherByCoordinatesFromInternet(27.567444F,
-                        53.893009F)
+                    repository.getCurrentWeatherByCoordinatesFromInternet(longitude, latitude)
             }else{
                     repository.getCurrentWeatherFromCash()
             }
@@ -35,7 +34,6 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
             withContext(Dispatchers.Main){
                 _today.value = todayGeo
                 _loading.value = false
-                Log.d("WTF", "${today.value}")
             }
         }
     }
@@ -53,7 +51,6 @@ class TodayViewModel (private val repository: Repository,application: Applicatio
             withContext(Dispatchers.Main){
                 _today.value = todayCity
                 _loading.value = false
-                Log.d("WTF", "${today.value}")
             }
         }
     }

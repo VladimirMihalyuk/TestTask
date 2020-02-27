@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,6 +25,7 @@ import com.example.testtask.forecast.ForecastFragment
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
 import com.example.testtask.today.TodayFragment
+import com.example.testtask.utils.isLocationAvailable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,12 +36,15 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var viewModel: ActivityViewModel
     lateinit var container: FrameLayout
+    lateinit var title: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         container = findViewById(R.id.container)
+        title = findViewById(R.id.toolbar_title)
+
         if (savedInstanceState == null) {
             showStartFragment(TodayFragment())
         }
@@ -61,40 +66,40 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-        askGeolocation()
-
-
-        viewModel.location.observe(this, Observer{
-            Log.d("WTF", "$it")
-        })
     }
 
-
+    fun setTitle(titleText: String){
+        title.text = titleText
+    }
 
     fun askGeolocation(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                AlertDialog.Builder(this)
-                    .setTitle("Geolocation permission")
-                    .setMessage("Need your location for work")
-                    .setPositiveButton("Ok") { _,   _ ->
-                        ActivityCompat.requestPermissions(this,
+        if(isLocationAvailable(this)){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    AlertDialog.Builder(this)
+                        .setTitle("Geolocation permission")
+                        .setMessage("Need your location for work")
+                        .setPositiveButton("Ok") { _,   _ ->
+                            ActivityCompat.requestPermissions(this,
+                                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                MY_PERMISSIONS_REQUEST) }
+                        .setNegativeButton("Cancel") { _, _ ->
+                            showSnackBarWithAction()}
+                        .show()
+                } else {
+                    ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        MY_PERMISSIONS_REQUEST) }
-                    .setNegativeButton("Cancel") { _, _ ->
-                        showSnackBarWithAction()}
-                    .show()
-            } else {
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MY_PERMISSIONS_REQUEST)
+                        MY_PERMISSIONS_REQUEST)
+                }
+            }else{
+                viewModel.requestLocation()
             }
         }else{
-            viewModel.requestLocation()
+            showSnackBar()
         }
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -133,6 +138,11 @@ class MainActivity : AppCompatActivity() {
             intent.data = uri
             startActivityForResult(intent, 0)
         }
+    }
+
+    private fun showSnackBar(){
+        Snackbar.make(container, "Please turn on GPS",
+            Snackbar.LENGTH_LONG).show()
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->

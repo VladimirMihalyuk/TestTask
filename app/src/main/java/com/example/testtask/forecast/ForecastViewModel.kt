@@ -24,13 +24,12 @@ class ForecastViewModel(private val repository: Repository, application: Applica
     val loading: LiveData<Boolean>
         get() = _loading
 
-    fun getForecastByCoordinates(){
+    fun getForecastByCoordinates(longitude: Float, latitude: Float){
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val forecastGeo =
                 if(isInternetAvailable(getApplication())){
-                    repository.getForecastByCoordinatesFromInternet(27.567444F,
-                        53.893009F)
+                    repository.getForecastByCoordinatesFromInternet(longitude,latitude)
                 }else{
                     repository.getForecastFromCash()
                 }
