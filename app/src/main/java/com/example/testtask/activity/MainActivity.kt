@@ -137,6 +137,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.setUseGeolocation(true)
             }
         }else{
+            viewModel.setUseGeolocation(false)
             showSnackBar()
         }
 
