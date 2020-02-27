@@ -16,6 +16,7 @@ import com.example.testtask.forecast.adapter.ForecastAdapter
 import com.example.testtask.forecast.adapter.ForecastListItem
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_forecast.view.*
 
 /**
@@ -59,9 +60,16 @@ class ForecastFragment : Fragment() {
 
         (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
             if((activity as MainActivity).viewModel.useGeolocation() == false){
-                list.firstOrNull()?.let{
-                    viewModel.getForecastByCityName(it.name)
+                val city = list.firstOrNull()
+                if(city != null){
+                    viewModel.getForecastByCityName(city.name)
+                } else {
+                    Snackbar.make(view.list, "Please select city",
+                        Snackbar.LENGTH_LONG).show()
                 }
+
+
+
             }
         })
 

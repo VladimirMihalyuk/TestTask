@@ -36,5 +36,5 @@ class CitiesViewModel(private val repository: Repository)
         }
     }
 
-    val selectedCities = repository.getSelected()
+
 }

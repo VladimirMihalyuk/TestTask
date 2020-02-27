@@ -17,7 +17,7 @@ import com.example.testtask.database.MyDatabase
 import com.example.testtask.databinding.FragmentTodayBinding
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
-
+import com.google.android.material.snackbar.Snackbar
 
 
 class TodayFragment : Fragment() {
@@ -56,9 +56,14 @@ class TodayFragment : Fragment() {
 
         (activity as MainActivity).viewModel.city.observe(viewLifecycleOwner, Observer {list ->
             if((activity as MainActivity).viewModel.useGeolocation() == false){
-                list.firstOrNull()?.let{
-                    viewModel.getCurrentWeatherByCityName(it.name)
+                val city = list.firstOrNull()
+                if( city  != null){
+                    viewModel.getCurrentWeatherByCityName(city.name)
+                } else {
+                        Snackbar.make(binding.city, "Please select city",
+                            Snackbar.LENGTH_LONG).show()
                 }
+
             }
 
         })
@@ -72,8 +77,9 @@ class TodayFragment : Fragment() {
             }
         })
 
+
+
         return binding.root
     }
-
 
 }
