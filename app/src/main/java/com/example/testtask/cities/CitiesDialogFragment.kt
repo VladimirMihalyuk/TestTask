@@ -26,6 +26,4 @@ class MyDialog(val addNewCallback: (String) -> Unit) : DialogFragment() {
         }
         return v
     }
-
-
 }

@@ -54,7 +54,6 @@ class CitiesFragment : Fragment() {
         viewModel.allCities.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
-                Log.d("WTF", "$it")
             }
         })
 
@@ -71,7 +70,6 @@ class CitiesFragment : Fragment() {
                 (activity as MainActivity).setTitle("Your current location")
             }
         }
-
         return view
     }
 }

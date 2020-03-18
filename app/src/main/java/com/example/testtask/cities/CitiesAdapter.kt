@@ -1,7 +1,5 @@
 package com.example.testtask.cities
 
-
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +15,6 @@ import com.example.testtask.database.City
 
 class CitiesAdapter(val selected: (City, Boolean) -> Unit, val delete: (City) -> Unit) : ListAdapter<City,
         CitiesAdapter.ViewHolder>(CityDiffCallback()) {
-
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), selected, delete)
     }
@@ -36,7 +32,6 @@ class CitiesAdapter(val selected: (City, Boolean) -> Unit, val delete: (City) ->
         private val cancel: ImageView = itemView.findViewById(R.id.cancel)
 
         fun bind(city: City, selected: (City, Boolean) -> Unit, delete: (City) -> Unit) {
-            Log.d("WTF", "$city")
             cityName.text = city.name
             selectedSwitch.isChecked = city.isLastSelected
             selectedSwitch.setOnCheckedChangeListener { _, isChecked ->

@@ -11,7 +11,6 @@ import javax.inject.Inject
 
 class CitiesViewModel @Inject constructor(private val repository: Repository)
     : ViewModel() {
-
     val allCities = repository.getAllCities()
 
     fun addNewCity(cityName: String){
@@ -36,6 +35,4 @@ class CitiesViewModel @Inject constructor(private val repository: Repository)
             }
         }
     }
-
-
 }

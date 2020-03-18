@@ -41,7 +41,7 @@ fun createWorkRequest(city: String, minutes: Long): PeriodicWorkRequest {
     val data = Data.Builder()
     data.putString(KEY_STRING, city)
 
-    return PeriodicWorkRequestBuilder<UpdatesWorkManager>(minutes, TimeUnit.MINUTES)  
+    return PeriodicWorkRequestBuilder<UpdatesWorkManager>(minutes, TimeUnit.MINUTES)
         .setInputData(data.build())
         .setConstraints(createConstraints())
         .build()

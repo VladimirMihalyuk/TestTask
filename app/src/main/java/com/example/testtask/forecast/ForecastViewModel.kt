@@ -84,9 +84,6 @@ class ForecastViewModel @Inject constructor(private val repository: Repository,
                     _loading.value = false
                 }
             }
-
-
         }
     }
-
 }

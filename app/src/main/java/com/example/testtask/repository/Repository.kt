@@ -46,9 +46,6 @@ class Repository private constructor(
         return today
     }
 
-
-
-
     suspend fun getForecastByCoordinatesFromInternet(longitude: Float,
                                                      latitude: Float)
             = getForecastFromNetwork { apiClient.getForecastByCoordinates(longitude, latitude) }
@@ -58,7 +55,8 @@ class Repository private constructor(
             = getForecastFromNetwork { apiClient.getForecastByCityName(city)}
 
 
-    private suspend fun getForecastFromNetwork(load: () -> Deferred<ForecastNetwork>):List<ForecastListItem>{
+    private suspend fun getForecastFromNetwork
+                (load: () -> Deferred<ForecastNetwork>):List<ForecastListItem>{
         val forecast = load().await()
         val listFromNetwork = forecast.toListOfModels()
         val listWithHeaders =   listFromNetwork.toListWithHeaders()

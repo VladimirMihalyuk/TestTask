@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 class ActivityViewModel @Inject constructor(private val repository: Repository,
                                              application: Application) : AndroidViewModel(application) {
-
     private val _useGeolocation = MutableLiveData<Boolean>(false)
     val useGeolocation: LiveData<Boolean>
         get() = _useGeolocation
@@ -52,8 +51,6 @@ class ActivityViewModel @Inject constructor(private val repository: Repository,
         override fun onProviderEnabled(provider: String?) {}
         override fun onProviderDisabled(provider: String?) {}
     }
-
-
 
     @SuppressLint("MissingPermission")
     fun requestLocation(){
