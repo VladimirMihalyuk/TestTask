@@ -1,23 +1,25 @@
 package com.example.testtask.work_manager
 
-import android.content.Context
+import android.app.Application
 import androidx.work.*
-import com.example.testtask.database.MyDatabase
-import com.example.testtask.network.WeatherAPIClient
+import com.example.testtask.TestApplication
 import com.example.testtask.repository.Repository
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 val KEY_STRING = "KEY_STRING"
 val WORK_NAME = "WORK_NAME"
 
-class UpdatesWorkManager(val context: Context, workerParams: WorkerParameters)
-    : CoroutineWorker(context, workerParams) {
+class UpdatesWorkManager(val application: Application, workerParams: WorkerParameters)
+    : CoroutineWorker(application, workerParams) {
+
+    @Inject
+    lateinit var repository: Repository
+
 
     override suspend fun doWork(): Result{
         return  try {
-            val client = WeatherAPIClient.getClient()
-            val database = MyDatabase.getInstance(context).databaseDao
-            val repository = Repository.getInstance(client, database)
+            (application as TestApplication).appComponent.inject(this)
 
             val cityName = inputData.getString(KEY_STRING)
             cityName?.let{
@@ -39,7 +41,7 @@ fun createWorkRequest(city: String, minutes: Long): PeriodicWorkRequest {
     val data = Data.Builder()
     data.putString(KEY_STRING, city)
 
-    return PeriodicWorkRequestBuilder<UpdatesWorkManager>(minutes, TimeUnit.MINUTES)  // setting period to 12 hours
+    return PeriodicWorkRequestBuilder<UpdatesWorkManager>(minutes, TimeUnit.MINUTES)
         .setInputData(data.build())
         .setConstraints(createConstraints())
         .build()

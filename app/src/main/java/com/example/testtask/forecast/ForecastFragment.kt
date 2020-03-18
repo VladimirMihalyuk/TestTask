@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testtask.R
+import com.example.testtask.TestApplication
 import com.example.testtask.activity.ActivityViewModel
 import com.example.testtask.activity.MainActivity
 import com.example.testtask.database.MyDatabase
@@ -19,6 +20,7 @@ import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_forecast.view.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
@@ -30,19 +32,18 @@ class ForecastFragment : Fragment() {
     private lateinit var viewModel: ForecastViewModel
     private lateinit var list: RecyclerView
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_forecast, container, false)
+        ((activity as MainActivity).application as TestApplication).appComponent.inject(this)
         list = view.list
         val application = requireNotNull(this.activity).application
 
-        val client = WeatherAPIClient.getClient()
-        val database = MyDatabase.getInstance(application).databaseDao
-        val repository = Repository.getInstance(client, database)
-
-        val viewModelFactory = ForecastViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ForecastViewModel::class.java)
 
         adapter = ForecastAdapter(startList, application)

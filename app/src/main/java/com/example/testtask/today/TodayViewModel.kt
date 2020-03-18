@@ -9,9 +9,10 @@ import com.example.testtask.utils.isInternetAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class TodayViewModel (private val repository: Repository,application: Application)
-    : AndroidViewModel(application) {
+class TodayViewModel  @Inject constructor(private val repository: Repository,
+                                          application: Application) : AndroidViewModel(application) {
 
     private var _today = MutableLiveData<Today?>()
     val today: LiveData<Today?>

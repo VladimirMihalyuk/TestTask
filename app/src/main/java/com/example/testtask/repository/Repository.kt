@@ -21,18 +21,8 @@ class Repository private constructor(
     private val database: DatabaseDAO
 ) {
     companion object {
-        @Volatile
-        private var INSTANCE: Repository? = null
-        fun getInstance(apiClient: OpenWeatherMapAPI, database: DatabaseDAO): Repository {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Repository(apiClient, database)
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
+        fun getInstance(apiClient: OpenWeatherMapAPI, database: DatabaseDAO)
+                = Repository(apiClient, database)
     }
 
     suspend fun getCurrentWeatherByCoordinatesFromInternet(longitude: Float,
@@ -56,9 +46,6 @@ class Repository private constructor(
         return today
     }
 
-
-
-
     suspend fun getForecastByCoordinatesFromInternet(longitude: Float,
                                                      latitude: Float)
             = getForecastFromNetwork { apiClient.getForecastByCoordinates(longitude, latitude) }
@@ -68,7 +55,8 @@ class Repository private constructor(
             = getForecastFromNetwork { apiClient.getForecastByCityName(city)}
 
 
-    private suspend fun getForecastFromNetwork(load: () -> Deferred<ForecastNetwork>):List<ForecastListItem>{
+    private suspend fun getForecastFromNetwork
+                (load: () -> Deferred<ForecastNetwork>):List<ForecastListItem>{
         val forecast = load().await()
         val listFromNetwork = forecast.toListOfModels()
         val listWithHeaders =   listFromNetwork.toListWithHeaders()

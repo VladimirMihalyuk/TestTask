@@ -11,12 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.testtask.activity.MainActivity
 import com.example.testtask.R
+import com.example.testtask.TestApplication
 import com.example.testtask.database.City
 import com.example.testtask.database.MyDatabase
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
 import kotlinx.android.synthetic.main.fragment_cities.*
 import kotlinx.android.synthetic.main.fragment_cities.view.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
@@ -25,19 +27,16 @@ class CitiesFragment : Fragment() {
 
     lateinit var viewModel: CitiesViewModel
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
+        ((activity as MainActivity).application as TestApplication).appComponent.inject(this)
 
-        val application = requireNotNull(this.activity).application
-
-        val client = WeatherAPIClient.getClient()
-        val database = MyDatabase.getInstance(application).databaseDao
-        val repository = Repository.getInstance(client, database)
-
-        val viewModelFactory = CitiesViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CitiesViewModel::class.java)
 
         val adapter = CitiesAdapter({ city: City, isSelected: Boolean ->
@@ -55,7 +54,6 @@ class CitiesFragment : Fragment() {
         viewModel.allCities.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
-                Log.d("WTF", "$it")
             }
         })
 
@@ -72,10 +70,6 @@ class CitiesFragment : Fragment() {
                 (activity as MainActivity).setTitle("Your current location")
             }
         }
-
-
         return view
     }
-
-
 }

@@ -15,9 +15,10 @@ import androidx.lifecycle.MutableLiveData
 import com.example.testtask.repository.Repository
 import com.example.testtask.work_manager.cancelWork
 import com.example.testtask.work_manager.startWork
+import javax.inject.Inject
 
-class ActivityViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
-
+class ActivityViewModel @Inject constructor(private val repository: Repository,
+                                             application: Application) : AndroidViewModel(application) {
     private val _useGeolocation = MutableLiveData<Boolean>(false)
     val useGeolocation: LiveData<Boolean>
         get() = _useGeolocation
@@ -50,8 +51,6 @@ class ActivityViewModel(private val repository: Repository, application: Applica
         override fun onProviderEnabled(provider: String?) {}
         override fun onProviderDisabled(provider: String?) {}
     }
-
-
 
     @SuppressLint("MissingPermission")
     fun requestLocation(){

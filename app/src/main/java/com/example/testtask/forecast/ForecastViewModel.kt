@@ -12,9 +12,10 @@ import com.example.testtask.utils.isInternetAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class ForecastViewModel(private val repository: Repository, application: Application)
-    : AndroidViewModel(application) {
+class ForecastViewModel @Inject constructor(private val repository: Repository,
+                                            application: Application) : AndroidViewModel(application) {
 
     private var _list = MutableLiveData<List<ForecastListItem>>()
     val list: LiveData<List<ForecastListItem>>
@@ -83,9 +84,6 @@ class ForecastViewModel(private val repository: Repository, application: Applica
                     _loading.value = false
                 }
             }
-
-
         }
     }
-
 }

@@ -13,33 +13,24 @@ private val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
 class WeatherAPIClient{
     companion object{
-        @Volatile
-        private var INSTANCE: OpenWeatherMapAPI? = null
-
-        fun getClient(): OpenWeatherMapAPI {
-            synchronized(this) {
-                if(INSTANCE == null){
-
-                    val httpClient = OkHttpClient.Builder()
-                    httpClient.addInterceptor(ApiKeyInterceptor())
-
-                    INSTANCE = Retrofit.Builder()
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                        .baseUrl(BASE_URL)
-                        .client(httpClient.build())
-                        .build()
-                        .create(OpenWeatherMapAPI::class.java)
-                }
-                return INSTANCE!!
-            }
-
+        fun okHttpClient():OkHttpClient{
+            val httpClient = OkHttpClient.Builder()
+            httpClient.addInterceptor(ApiKeyInterceptor())
+            return httpClient.build()
         }
+
+        fun provideApi(httpClient: OkHttpClient): OpenWeatherMapAPI =
+            Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .baseUrl(BASE_URL)
+                .client(httpClient)
+                .build()
+                .create(OpenWeatherMapAPI::class.java)
     }
 }
 
 private class ApiKeyInterceptor: Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val original: Request = chain.request()
         val originalHttpUrl = original.url
