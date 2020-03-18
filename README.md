@@ -2,7 +2,7 @@
 Test task.
 Worked with:
 - Kotlin
-- Material design
+- Dagger2
 - MVVM
 - Repository
 - DataBinding
@@ -13,5 +13,6 @@ Worked with:
 - RecyclerView
 - Bottom Navigation
 - ConstraintLayout
+- Material design
 - Work Manager
 - Geolocation
