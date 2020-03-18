@@ -22,7 +22,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.example.testtask.R
+import com.example.testtask.TestApplication
 import com.example.testtask.cities.CitiesFragment
 import com.example.testtask.database.MyDatabase
 import com.example.testtask.forecast.ForecastFragment
@@ -33,6 +35,7 @@ import com.example.testtask.utils.isLocationAvailable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,13 +45,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var container: FrameLayout
     private lateinit var title: TextView
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        (application as TestApplication).appComponent.inject(this)
+
         val myToolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(myToolbar)
-        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         container = findViewById(R.id.container)
         title = findViewById(R.id.toolbar_title)
@@ -58,14 +66,6 @@ class MainActivity : AppCompatActivity() {
         }
         navigation_view.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        val application = requireNotNull(this).application
-
-
-        val client = WeatherAPIClient.getClient()
-        val database = MyDatabase.getInstance(application).databaseDao
-        val repository = Repository.getInstance(client, database)
-
-        val viewModelFactory = ActivityViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ActivityViewModel::class.java)
 
         viewModel.city.observe(this, Observer {list ->
@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.background_menu, menu)
         return true
     }

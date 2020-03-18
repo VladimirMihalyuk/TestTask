@@ -7,8 +7,9 @@ import com.example.testtask.database.City
 import com.example.testtask.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CitiesViewModel(private val repository: Repository)
+class CitiesViewModel @Inject constructor(private val repository: Repository)
     : ViewModel() {
 
     val allCities = repository.getAllCities()

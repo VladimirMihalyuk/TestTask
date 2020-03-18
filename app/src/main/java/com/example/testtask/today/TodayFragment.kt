@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.testtask.R
+import com.example.testtask.TestApplication
 import com.example.testtask.activity.ActivityViewModel
 import com.example.testtask.activity.MainActivity
 import com.example.testtask.database.MyDatabase
@@ -20,6 +21,7 @@ import com.example.testtask.databinding.FragmentTodayBinding
 import com.example.testtask.network.WeatherAPIClient
 import com.example.testtask.repository.Repository
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 
 class TodayFragment : Fragment() {
@@ -27,6 +29,8 @@ class TodayFragment : Fragment() {
     private lateinit var viewModel: TodayViewModel
     private lateinit var cityText: TextView
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,13 +39,8 @@ class TodayFragment : Fragment() {
         val binding:FragmentTodayBinding =
             DataBindingUtil.inflate(inflater,
                 R.layout.fragment_today, container, false)
-        val application = requireNotNull(this.activity).application
 
-        val client = WeatherAPIClient.getClient()
-        val database = MyDatabase.getInstance(application).databaseDao
-        val repository = Repository.getInstance(client, database)
-
-        val viewModelFactory = TodayViewModelFactory(repository, application)
+        ((activity as MainActivity).application as TestApplication).appComponent.inject(this)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(TodayViewModel::class.java)
 

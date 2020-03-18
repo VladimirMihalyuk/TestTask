@@ -21,18 +21,8 @@ class Repository private constructor(
     private val database: DatabaseDAO
 ) {
     companion object {
-        @Volatile
-        private var INSTANCE: Repository? = null
-        fun getInstance(apiClient: OpenWeatherMapAPI, database: DatabaseDAO): Repository {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Repository(apiClient, database)
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
+        fun getInstance(apiClient: OpenWeatherMapAPI, database: DatabaseDAO)
+                = Repository(apiClient, database)
     }
 
     suspend fun getCurrentWeatherByCoordinatesFromInternet(longitude: Float,

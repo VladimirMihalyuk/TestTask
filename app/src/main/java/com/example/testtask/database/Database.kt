@@ -1,5 +1,6 @@
 package com.example.testtask.database
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -12,23 +13,12 @@ abstract class MyDatabase  : RoomDatabase() {
     abstract val databaseDao: DatabaseDAO
 
     companion object {
-        @Volatile
-        private var INSTANCE: MyDatabase? = null
-
-        fun getInstance(context: Context): MyDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        MyDatabase::class.java,
-                        "Database.db"
-                    ).fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
+        fun getInstance(application: Application): MyDatabase =
+            Room.databaseBuilder(
+                application,
+                MyDatabase::class.java,
+                "Database.db")
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }
